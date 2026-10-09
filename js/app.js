@@ -32,6 +32,43 @@ async function fetchSystemInfo() {
   }
 }
 
+// Global Page Transition Loading Controller
+let pageLoadingTimer = null;
+let pageLoadingStartTime = 0;
+
+function showPageLoading(title = 'Veriler Yükleniyor...', desc = 'Firebase bulut veritabanı senkronize ediliyor') {
+  const overlay = document.getElementById('pageLoadingOverlay');
+  const titleEl = document.getElementById('pageLoadingTitle');
+  const descEl = document.getElementById('pageLoadingDesc');
+  if (!overlay) return;
+
+  if (titleEl) titleEl.textContent = title;
+  if (descEl) descEl.textContent = desc;
+
+  pageLoadingStartTime = Date.now();
+  if (pageLoadingTimer) clearTimeout(pageLoadingTimer);
+  overlay.classList.add('active');
+}
+
+function hidePageLoading(forceInstant = false) {
+  const overlay = document.getElementById('pageLoadingOverlay');
+  if (!overlay) return;
+
+  const minDuration = 280; // Minimum duration to avoid micro-flicker and ensure smooth transition
+  const elapsed = Date.now() - pageLoadingStartTime;
+  const remaining = Math.max(0, minDuration - elapsed);
+
+  if (pageLoadingTimer) clearTimeout(pageLoadingTimer);
+
+  if (forceInstant || remaining <= 0) {
+    overlay.classList.remove('active');
+  } else {
+    pageLoadingTimer = setTimeout(() => {
+      overlay.classList.remove('active');
+    }, remaining);
+  }
+}
+
 // Tab Switching
 function switchTab(tabId) {
   document.querySelectorAll('.view-section').forEach(sec => {
@@ -92,7 +129,10 @@ function setupEventListeners() {
 
 // ================= 1. SURVEYS LIST =================
 
-async function loadSurveysList() {
+async function loadSurveysList(showLoading = true) {
+  if (showLoading) {
+    showPageLoading('Anketler Yükleniyor...', 'Firebase Firestore bulut veritabanından anketler çekiliyor');
+  }
   try {
     if (window.FirebaseService) {
       allSurveys = await window.FirebaseService.getAllSurveys();
@@ -105,6 +145,10 @@ async function loadSurveysList() {
     populateAllDropdowns();
   } catch (err) {
     showToast(err.message, 'error');
+  } finally {
+    if (showLoading) {
+      hidePageLoading();
+    }
   }
 }
 
@@ -475,6 +519,8 @@ async function loadAnalyticsForSelectedSurvey() {
 
   if (!selectedAnalyticsSurveyId) return;
 
+  showPageLoading('Sonuçlar & Analiz Hazırlanıyor...', 'Canlı yanıt verileri ve renkli grafikler hesaplanıyor');
+
   try {
     let data = null;
     if (window.FirebaseService) {
@@ -503,6 +549,8 @@ async function loadAnalyticsForSelectedSurvey() {
     }
   } catch (err) {
     showToast(err.message, 'error');
+  } finally {
+    hidePageLoading();
   }
 }
 
@@ -985,6 +1033,7 @@ async function saveSurveyForm() {
   };
 
   try {
+    showPageLoading('Anket Kaydediliyor...', 'Anket yapısı Firebase Firestore bulutuna işleniyor');
     let saved;
     if (window.FirebaseService) {
       saved = await window.FirebaseService.saveSurvey({
@@ -1011,15 +1060,18 @@ async function saveSurveyForm() {
     }
 
     showToast(`"${saved.title}" başarıyla kaydedildi!`, 'success');
-    await loadSurveysList();
+    await loadSurveysList(false);
     switchTab('tab-surveys');
   } catch (err) {
     showToast(err.message, 'error');
+  } finally {
+    hidePageLoading();
   }
 }
 
 async function duplicateSurvey(surveyId) {
   try {
+    showPageLoading('Anket Kopyalanıyor...', 'Anket soruları kopyalanıp yeni bir anket üretiliyor');
     if (window.FirebaseService) {
       await window.FirebaseService.duplicateSurvey(surveyId);
     } else {
@@ -1027,9 +1079,11 @@ async function duplicateSurvey(surveyId) {
       if (!res.ok) throw new Error('Kopyalama başarısız');
     }
     showToast('Anket kopyası oluşturuldu', 'success');
-    await loadSurveysList();
+    await loadSurveysList(false);
   } catch (err) {
     showToast(err.message, 'error');
+  } finally {
+    hidePageLoading();
   }
 }
 
@@ -1039,6 +1093,7 @@ function confirmDeleteSurvey(surveyId, title) {
     `"${title}" anketi ve toplanmış olan tüm yanıtları tamamen silinecektir. Onaylıyor musunuz?`,
     async () => {
       try {
+        showPageLoading('Anket Siliniyor...', 'Anket ve ilişkili tüm yanıt kayıtları temizleniyor');
         if (window.FirebaseService) {
           await window.FirebaseService.deleteSurvey(surveyId);
         } else {
@@ -1047,9 +1102,11 @@ function confirmDeleteSurvey(surveyId, title) {
         }
         showToast('Anket silindi', 'info');
         closeConfirmModal();
-        await loadSurveysList();
+        await loadSurveysList(false);
       } catch (err) {
         showToast(err.message, 'error');
+      } finally {
+        hidePageLoading();
       }
     }
   );
