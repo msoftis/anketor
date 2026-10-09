@@ -494,6 +494,13 @@ async function loadAnalyticsForSelectedSurvey() {
     }
     currentAnalyticsData = data;
     renderAnalyticsData(data);
+
+    // Keep survey card in list perfectly synchronized
+    const matchedSurvey = allSurveys.find(s => String(s.id) === String(selectedAnalyticsSurveyId));
+    if (matchedSurvey && matchedSurvey.responseCount !== data.totalCount) {
+      matchedSurvey.responseCount = data.totalCount;
+      filterSurveysList();
+    }
   } catch (err) {
     showToast(err.message, 'error');
   }

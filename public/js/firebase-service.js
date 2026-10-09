@@ -27,6 +27,22 @@
         list.push({ ...doc.data(), id: doc.id });
       });
 
+      // Synchronize response counts from actual responses collection
+      try {
+        const respSnap = await db.collection('responses').get();
+        const counts = {};
+        respSnap.forEach(d => {
+          const sid = String(d.data().surveyId);
+          counts[sid] = (counts[sid] || 0) + 1;
+        });
+
+        list.forEach(s => {
+          s.responseCount = counts[String(s.id)] || 0;
+        });
+      } catch (countErr) {
+        console.warn('Yanıt sayıları senkronizasyon uyarısı:', countErr);
+      }
+
       // Sort by createdAt descending
       list.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
       return list;
@@ -48,7 +64,12 @@
     try {
       const doc = await db.collection('surveys').doc(strId).get();
       if (doc.exists) {
-        return { ...doc.data(), id: doc.id };
+        const data = { ...doc.data(), id: doc.id };
+        try {
+          const respSnap = await db.collection('responses').where('surveyId', '==', strId).get();
+          data.responseCount = respSnap.size;
+        } catch (_) {}
+        return data;
       }
       return null;
     } catch (err) {
