@@ -86,13 +86,16 @@ function switchTab(tabId) {
   const mainTitleEl = document.getElementById('navMainTitle');
   const subBreadcrumbEl = document.getElementById('subViewBreadcrumb');
   const subTitleBadgeEl = document.getElementById('subViewTitleBadge');
+  const headerBackBtn = document.getElementById('headerBackBtn');
 
   if (tabId === 'tab-surveys') {
     if (mainTitleEl) mainTitleEl.style.display = 'inline-flex';
     if (subBreadcrumbEl) subBreadcrumbEl.style.display = 'none';
+    if (headerBackBtn) headerBackBtn.style.display = 'none';
   } else {
     if (mainTitleEl) mainTitleEl.style.display = 'none';
     if (subBreadcrumbEl) subBreadcrumbEl.style.display = 'inline-flex';
+    if (headerBackBtn) headerBackBtn.style.display = 'inline-flex';
 
     if (tabId === 'tab-analytics') {
       const s = allSurveys.find(x => String(x.id) === String(selectedAnalyticsSurveyId)) || allSurveys[0];
@@ -2173,6 +2176,8 @@ function updateAuthUI(user) {
     if (appContainer) appContainer.style.display = 'none';
     if (userPill) userPill.style.display = 'none';
     authButtons.forEach(btn => btn.style.display = 'none');
+    const headerBackBtn = document.getElementById('headerBackBtn');
+    if (headerBackBtn) headerBackBtn.style.display = 'none';
   }
 }
 

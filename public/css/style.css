@@ -132,6 +132,54 @@ body {
   gap: 16px;
 }
 
+.header-left-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Büyük Geri Butonu (Header'da Sabit, Yazısız, Belirgin İkon) */
+.btn-header-back {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1.5px solid var(--border-color);
+  color: var(--text-main);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  user-select: none;
+  padding: 0;
+}
+
+.btn-header-back .back-arrow-icon {
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1;
+  display: inline-block;
+  transition: transform var(--transition-fast);
+}
+
+.btn-header-back:hover {
+  background: var(--primary-soft);
+  color: var(--primary);
+  border-color: var(--primary-border);
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.2);
+}
+
+.btn-header-back:hover .back-arrow-icon {
+  transform: translateX(-3px);
+}
+
+.btn-header-back:active {
+  transform: scale(0.95);
+}
+
 .brand-wrapper {
   display: flex;
   align-items: center;

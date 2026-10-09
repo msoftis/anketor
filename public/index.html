@@ -13,14 +13,21 @@
   <!-- Header: Sadece Logo, Yeni Anket ve Çıkış Butonu -->
   <header class="app-header">
     <div class="container header-content">
-      <div class="brand-wrapper">
-        <div class="brand-icon">📊</div>
-        <div>
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <span class="brand-name">ANKETOR</span>
-            <span class="brand-badge">PRO v1.0</span>
+      <div class="header-left-wrapper">
+        <!-- Büyük Geri Butonu (Yazısız, sadece büyük ikon, sticky header'da sabit) -->
+        <button type="button" class="btn-header-back" id="headerBackBtn" onclick="switchTab('tab-surveys')" title="Anketlerime Geri Dön" style="display: none;">
+          <span class="back-arrow-icon">←</span>
+        </button>
+
+        <div class="brand-wrapper">
+          <div class="brand-icon">📊</div>
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="brand-name">ANKETOR</span>
+              <span class="brand-badge">PRO v1.0</span>
+            </div>
+            <p class="brand-subline">Yönetim, Yanıt Toplama & Analitik</p>
           </div>
-          <p class="brand-subline">Yönetim, Yanıt Toplama & Analitik</p>
         </div>
       </div>
 
@@ -79,11 +86,7 @@
             <span class="nav-heading-icon">📋</span>
             <span class="nav-heading-text">Anketlerim</span>
           </div>
-          <div id="subViewBreadcrumb" style="display: none; align-items: center; gap: 10px;">
-            <button class="btn btn-secondary btn-sm" onclick="switchTab('tab-surveys')" title="Anketler listesine geri dön">
-              <span>← Anketlerime Dön</span>
-            </button>
-            <span style="color: var(--text-dim); font-size: 14px;">/</span>
+          <div id="subViewBreadcrumb" style="display: none; align-items: center; gap: 8px;">
             <span id="subViewTitleBadge" class="breadcrumb-current-badge"></span>
           </div>
         </div>
