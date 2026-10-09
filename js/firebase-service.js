@@ -24,24 +24,13 @@
       const snap = await db.collection('surveys').get();
       const list = [];
       snap.forEach(doc => {
-        list.push({ ...doc.data(), id: doc.id });
+        const d = doc.data();
+        list.push({
+          ...d,
+          id: doc.id,
+          responseCount: Number(d.responseCount) || 0
+        });
       });
-
-      // Synchronize response counts from actual responses collection
-      try {
-        const respSnap = await db.collection('responses').get();
-        const counts = {};
-        respSnap.forEach(d => {
-          const sid = String(d.data().surveyId);
-          counts[sid] = (counts[sid] || 0) + 1;
-        });
-
-        list.forEach(s => {
-          s.responseCount = counts[String(s.id)] || 0;
-        });
-      } catch (countErr) {
-        console.warn('Yanıt sayıları senkronizasyon uyarısı:', countErr);
-      }
 
       // Sort by createdAt descending
       list.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
@@ -259,19 +248,14 @@
         await batch.commit();
       }
 
-      // Update response count
+      // Update response count on survey document
       const surveyRef = db.collection('surveys').doc(String(surveyId));
-      await db.runTransaction(async (transaction) => {
-        const sfDoc = await transaction.get(surveyRef);
-        if (sfDoc.exists) {
-          const currentCount = sfDoc.data().responseCount || 0;
-          transaction.update(surveyRef, { responseCount: currentCount + generated.length });
-        }
-      });
+      if (firebase && firebase.firestore && firebase.firestore.FieldValue) {
+        await surveyRef.update({
+          responseCount: firebase.firestore.FieldValue.increment(generated.length)
+        }).catch(e => console.warn('Count increment warning:', e));
+      }
     }
-
-    // Save to local as well
-    generated.forEach(r => saveLocalResponse(r));
 
     return generated.length;
   }

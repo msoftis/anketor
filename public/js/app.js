@@ -34,6 +34,7 @@ async function fetchSystemInfo() {
 
 // Global Page Transition Loading Controller
 let pageLoadingTimer = null;
+let pageLoadingSafetyTimer = null;
 let pageLoadingStartTime = 0;
 
 function showPageLoading(title = 'Veriler Yükleniyor...', desc = 'Firebase bulut veritabanı senkronize ediliyor') {
@@ -47,14 +48,21 @@ function showPageLoading(title = 'Veriler Yükleniyor...', desc = 'Firebase bulu
 
   pageLoadingStartTime = Date.now();
   if (pageLoadingTimer) clearTimeout(pageLoadingTimer);
+  if (pageLoadingSafetyTimer) clearTimeout(pageLoadingSafetyTimer);
   overlay.classList.add('active');
+
+  // Hard safety timeout: Dismiss after max 5 seconds
+  pageLoadingSafetyTimer = setTimeout(() => {
+    overlay.classList.remove('active');
+  }, 5000);
 }
 
 function hidePageLoading(forceInstant = false) {
   const overlay = document.getElementById('pageLoadingOverlay');
   if (!overlay) return;
 
-  const minDuration = 280; // Minimum duration to avoid micro-flicker and ensure smooth transition
+  if (pageLoadingSafetyTimer) clearTimeout(pageLoadingSafetyTimer);
+  const minDuration = 200; // Minimum duration to avoid micro-flicker and ensure smooth transition
   const elapsed = Date.now() - pageLoadingStartTime;
   const remaining = Math.max(0, minDuration - elapsed);
 
@@ -1668,14 +1676,18 @@ async function startSimulation() {
       statusLabel.textContent = 'Tamamlandı!';
       logTicker.textContent = `✓ ${addedCount} adet anket yanıtı başarıyla eklendi!`;
 
-      showToast(`${addedCount} adet ağırlıklı rastgele yanıt üretildi!`, 'success');
-      await loadSurveysList();
+      showToast(`✓ ${addedCount} adet anket yanıtı başarıyla Firestore bulutuna kaydedildi!`, 'success');
+      setTimeout(() => {
+        closeSimulatorModal();
+      }, 500);
+      await loadSurveysList(false);
       if (selectedAnalyticsSurveyId === surveyId) {
         await loadAnalyticsForSelectedSurvey();
       }
     } catch (err) {
       showToast(err.message, 'error');
     } finally {
+      hidePageLoading(true);
       startBtn.disabled = false;
       startBtn.textContent = '⚡ Doldurmayı Başlat';
     }
