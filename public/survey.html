@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anket Formu - Anketor</title>
+  <link rel="stylesheet" href="/css/survey.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%22100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+</head>
+<body>
+
+  <div class="survey-wrapper">
+    <!-- Brand Pill -->
+    <div class="survey-brand">
+      <div class="brand-badge-pill">
+        <span class="brand-dot"></span>
+        <span id="brandName">Anketor Platformu</span>
+      </div>
+    </div>
+
+    <!-- Progress Tracker -->
+    <div class="survey-progress-wrapper" id="progressWrapper" style="display: none;">
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+
+    <!-- Main Card Container -->
+    <div class="survey-main-card" id="surveyCard">
+      <!-- Loading State -->
+      <div id="loadingState" style="text-align: center; padding: 48px 0;">
+        <div style="font-size: 32px; margin-bottom: 12px; animation: spin 1s infinite linear;">⏳</div>
+        <p style="color: var(--text-muted); font-weight: 500;">Anket yükleniyor, lütfen bekleyiniz...</p>
+      </div>
+
+      <!-- Inactive / Not Found Message -->
+      <div id="errorState" style="display: none; text-align: center; padding: 40px 0;">
+        <div style="font-size: 48px; margin-bottom: 16px;">🔒</div>
+        <h2 style="font-size: 22px; margin-bottom: 8px;" id="errorTitle">Ankete Ulaşılamıyor</h2>
+        <p style="color: var(--text-muted);" id="errorDesc">Bu anket yayından kaldırılmış veya bağlantı geçersiz olabilir.</p>
+      </div>
+
+      <!-- Survey Content Form -->
+      <form id="surveyForm" style="display: none;" onsubmit="handleSurveySubmit(event)">
+        <h1 class="survey-title" id="surveyTitle">Anket Başlığı</h1>
+        <p class="survey-description" id="surveyDescription">Açıklama</p>
+
+        <!-- Dynamic Questions Container -->
+        <div id="questionsContainer"></div>
+
+        <!-- Submit Button -->
+        <div class="submit-btn-wrapper">
+          <button type="submit" class="btn-submit" id="submitBtn">
+            <span>Yanıtı Gönder</span>
+            <span>➔</span>
+          </button>
+          <p id="submitErrorMsg" style="color: #f43f5e; font-size: 13px; text-align: center; display: none;"></p>
+        </div>
+      </form>
+
+      <!-- Success Screen -->
+      <div class="success-card" id="successState" style="display: none;">
+        <div class="success-icon-badge">✓</div>
+        <h2 class="success-title">Yanıtınız Başarıyla Kaydedildi!</h2>
+        <p class="success-desc">Değerli vaktinizi ayırıp görüşlerinizi paylaştığınız için teşekkür ederiz. Yanıtınız sisteme işlendi.</p>
+        <button type="button" class="btn-new-response" onclick="location.reload()">
+          <span>🔄 Yeni Yanıt Gönder</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase Cloud SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="/js/firebase-config.js"></script>
+  <script src="/js/survey.js"></script>
+</body>
+</html>

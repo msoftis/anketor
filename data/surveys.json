@@ -1,0 +1,595 @@
+[
+  {
+    "id": "2",
+    "title": "Duygusal Tepkisellik ve Marka Tercihleri Araştırma Anketi (Kopya)",
+    "description": "Bu anket, demografik özellikler, duygusal eğilimler ve marka tercihleri arasındaki ilişkiyi incelemek amacıyla hazırlanmıştır. Lütfen tüm soruları dikkatlice yanıtlayınız.",
+    "themeColor": "#4f46e5",
+    "active": true,
+    "createdAt": "2026-10-09T11:20:33.181Z",
+    "updatedAt": "2026-10-09T11:40:19.064Z",
+    "questions": [
+      {
+        "id": "d_1",
+        "title": "Cinsiyetiniz",
+        "type": "single",
+        "options": [
+          "Kadın",
+          "Erkek"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "d_2",
+        "title": "Yaşınız",
+        "type": "single",
+        "options": [
+          "18 - 25",
+          "26 - 35",
+          "36 - 45",
+          "46 - 55",
+          "56 yaş ve üzeri"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "d_3",
+        "title": "Eğitim Durumu",
+        "type": "single",
+        "options": [
+          "Lise / Lise Altı",
+          "Ön Lisans",
+          "Lisans",
+          "Lisansüstü / Doktora"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "d_5",
+        "title": "Günlük Ortalama Sosyal Medya / Dijital Reklam Kullanım Süresi",
+        "type": "single",
+        "options": [
+          "0 - 1 Saat",
+          "2 - 3 Saat",
+          "4 - 5 Saat",
+          "5 Saat ve üzeri"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "d_6",
+        "title": "Gelir Düzeyi",
+        "type": "single",
+        "options": [
+          "0 - 20.000 TL",
+          "30.001 - 50.000 TL",
+          "50.001 - 70.000 TL",
+          "70.001 TL ve üzeri"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_1",
+        "title": "1. Üzücü olaylar karşısında çok kolayca duygusallaşırım.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_2",
+        "title": "2. Çok küçük şeyler bile beni duygusallaştırır.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_3",
+        "title": "3. Bir duyguyu yaşadığımda çok yoğun yaşarım.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_4",
+        "title": "4. Üzücü bir şey yaşadığımda, uzun bir süre ona kafa yorarım.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_5",
+        "title": "5. Duygularımı çok yoğun yaşarım.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_6",
+        "title": "6. Duygularımda ani iniş-çıkışlar yaşadığım olur.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_7",
+        "title": "7. Bir duyguyu yaşadığımda başka bir duyguyu yaşamak benim için çok zordur.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_8",
+        "title": "8. Benim için mantıklı düzgün düşünmek zordur, bu yüzden kendimi genellikle mutsuz hissederim.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_9",
+        "title": "9. Duygusal olarak çok çabuk incinirim.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_10",
+        "title": "10. Kızgın olduğumda çevremdekiler beni zor sakinleştirir.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_11",
+        "title": "11. Kendimi genellikle endişeli hissederim.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_12",
+        "title": "12. Diğer insanların önemsemediği şeylere çok kafa yorarım.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_13",
+        "title": "13. Üzücü bir durum karşısında kolayca dağılırım.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_14",
+        "title": "14. Çevremdekiler olaylara aşırı tepki verdiğimi söyler.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_15",
+        "title": "15. Eğer biriyle bir anlaşmazlık yaşarsam, bu durumu kafamdan atmam zaman alır.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_16",
+        "title": "16. Kötü bir olay yaşadığımda, ruh halim hızlıca değişir.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_17",
+        "title": "17. Çevremdekiler olaylar karşısında sakinliğimi koruyamadığımı söyler.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_18",
+        "title": "18. Markaların reklamlarında ünlü kişilerin rol alması tercihimi etkiler.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_19",
+        "title": "19. Reklamı yapılan markaların güçlü ve güvenilir olduğunu düşünüyorum.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_20",
+        "title": "20. Tercih ettiğim markaların reklamını sık sık görmek beni etkiler.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_21",
+        "title": "21. Reklamı yapılmayan markalardan ziyade reklamı yapılan markaları satın alırım.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_22",
+        "title": "22. Kullandığım markaların genel imajı benim nasıl biri olduğumu yansıtır.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_23",
+        "title": "23. Kullandığım markaların genel imajı olmak istediğim kişiliği yansıtır.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_24",
+        "title": "24. Kullandığım markalar bana bir gruba üyeymişim hissi veriyor.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_25",
+        "title": "25. Bir ürün satın alırken markası benim için çok önemlidir.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_26",
+        "title": "26. Satın alacağım ürünün marka ismi ve işareti (logosu) beni etkiler.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_27",
+        "title": "27. Markalı giysilerle (eşyalarla) kendimi rahat hissederim.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_28",
+        "title": "28. Kullandığım ürünün markasının görünür olmasını severim.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_29",
+        "title": "29. Satın alacağım ürünün yönelik fiyat indirimleri tercihimi etkiler.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_30",
+        "title": "30. Alışverişe çıktığımda satın alacağım ürüne yönelik alternatif markalar arasında tercih yaparım.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_31",
+        "title": "31. Satın alacağım ürüne yönelik alternatif tüm markaların özelliklerini ve fiyatlarını dikkatle incelerim.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_32",
+        "title": "32. Bir ürün satın alırken farklı markalar arasında karşılaştırma yaparım.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_33",
+        "title": "33. Yabancı markalar kullanmak insanların toplum içerisindeki statüsünü arttırır.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_34",
+        "title": "34. Eğer kaliteleri aynı ise yerli bir ürünü yabancı bir ürüne tercih ederim.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_35",
+        "title": "35. Yabancı bir marka kullanmakla övünürüm.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_36",
+        "title": "36. Arkadaşımın veya çevremdeki insanların hangi markaları kullandığı benim için önemlidir.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      },
+      {
+        "id": "q_37",
+        "title": "37. Arkadaşımın marka tercihleri onunla olan ilişkimizi etkiler.",
+        "type": "single",
+        "options": [
+          "Kesinlikle Katılmıyorum",
+          "Katılmıyorum",
+          "Kararsızım",
+          "Katılıyorum",
+          "Kesinlikle Katılıyorum"
+        ],
+        "maxRating": 5,
+        "required": true
+      }
+    ]
+  }
+]

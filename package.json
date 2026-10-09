@@ -1,0 +1,27 @@
+{
+  "name": "anketor",
+  "version": "1.0.0",
+  "description": "Modern Anket Yönetimi, Yanıt Toplama ve Simülasyon Platformu",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "survey",
+    "anket",
+    "form",
+    "simulation",
+    "analytics"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "firebase": "^13.0.0",
+    "mammoth": "^1.13.0",
+    "multer": "^2.4.0",
+    "qrcode": "^1.5.4"
+  }
+}

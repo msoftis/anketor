@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anketor - Modern Anket Yönetimi & Analitik Platformu</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+</head>
+<body>
+
+  <!-- ================= APP HEADER ================= -->
+  <!-- Header: Sadece Logo, Yeni Anket ve Çıkış Butonu -->
+  <header class="app-header">
+    <div class="container header-content">
+      <div class="brand-wrapper">
+        <div class="brand-icon">📊</div>
+        <div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="brand-name">ANKETOR</span>
+            <span class="brand-badge">PRO v1.0</span>
+          </div>
+          <p class="brand-subline">Yönetim, Yanıt Toplama & Analitik</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- HEADER'DA YALNIZCA YENİ ANKET VE ÇIKIŞ BUTONU -->
+        <button class="btn btn-primary btn-header-new auth-required" style="display: none;" onclick="switchTab('tab-builder'); resetSurveyForm();">
+          <span>+ Yeni Anket</span>
+        </button>
+        <button class="btn btn-header-logout auth-required" style="display: none;" onclick="handleLogout()" title="Yönetici Oturumunu Kapat">
+          <span>🚪 Çıkış</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= AUTH GATE (YÖNETİCİ GİRİŞİ) ================= -->
+  <div id="authGateContainer" style="display: block; padding: 60px 16px;">
+    <div class="card" style="max-width: 440px; margin: 0 auto; box-shadow: var(--shadow-xl); border: 1px solid var(--border-color); background: #ffffff;">
+      <div style="text-align: center; margin-bottom: 24px;">
+        <div style="width: 56px; height: 56px; border-radius: 16px; background: var(--primary-soft); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 16px auto; border: 1px solid var(--primary-border);">
+          🔐
+        </div>
+        <h2 style="font-size: 22px; font-weight: 800; color: var(--text-main); margin-bottom: 6px;" id="authHeaderTitle">Yönetici Paneli Girişi</h2>
+        <p style="font-size: 13px; color: var(--text-muted);" id="authHeaderDesc">Anketleri yönetmek, analizleri incelemek ve simülasyon yapmak için giriş yapınız.</p>
+      </div>
+
+      <form id="loginForm" onsubmit="handleAuthSubmit(event)">
+        <div class="form-group">
+          <label class="form-label">Kullanıcı Adı</label>
+          <input type="text" id="authUsernameInput" class="form-input" placeholder="admin" autocomplete="username" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Parola</label>
+          <input type="password" id="authPasswordInput" class="form-input" placeholder="••••••••••••" autocomplete="current-password" required>
+        </div>
+
+        <div id="authErrorMsg" style="display: none; background: var(--accent-rose-soft); border: 1px solid var(--accent-rose-border); border-radius: var(--radius-sm); color: var(--accent-rose); padding: 10px 14px; font-size: 13px; margin-bottom: 16px; font-weight: 600;">
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="btnAuthSubmit" style="width: 100%; padding: 12px; font-size: 15px; margin-top: 6px;">
+          Giriş Yap ➔
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= AUTHENTICATED DASHBOARD CONTENT ================= -->
+  <div id="authenticatedAppContainer" style="display: none;">
+    
+    <!-- Sub-Header / Navigation Bar -->
+    <nav class="nav-bar">
+      <div class="container nav-bar-inner">
+        <div class="nav-brand-breadcrumb">
+          <div id="navMainTitle" class="nav-main-heading">
+            <span class="nav-heading-icon">📋</span>
+            <span class="nav-heading-text">Anketlerim</span>
+          </div>
+          <div id="subViewBreadcrumb" style="display: none; align-items: center; gap: 10px;">
+            <button class="btn btn-secondary btn-sm" onclick="switchTab('tab-surveys')" title="Anketler listesine geri dön">
+              <span>← Anketlerime Dön</span>
+            </button>
+            <span style="color: var(--text-dim); font-size: 14px;">/</span>
+            <span id="subViewTitleBadge" class="breadcrumb-current-badge"></span>
+          </div>
+        </div>
+
+        <!-- Ağ Durumu & Kullanıcı Göstergesi (Header yerine buraya yerleştirildi) -->
+        <div class="nav-bar-tools">
+          <div class="network-pill" id="networkPill" title="Ağdaki diğer cihazlar bu IP ile erişebilir">
+            <span class="network-dot"></span>
+            <span id="networkIpText">Yükleniyor...</span>
+          </div>
+          <div id="adminUserPill" class="admin-user-pill">
+            <span>👤</span>
+            <span id="adminUserEmail">admin</span>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="container main-content">
+
+      <!-- ================= 1. ANKETLERİM (SURVEYS LIST) ================= -->
+      <section id="tab-surveys" class="view-section active">
+        
+        <!-- Toolbar & Quick Actions -->
+        <div class="section-toolbar-card">
+          <div class="toolbar-left">
+            <div class="search-input-wrapper">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="surveySearchInput" class="form-input search-input" placeholder="Anket başlığı veya açıklamasında ara..." oninput="filterSurveysList()">
+            </div>
+            <select id="surveyStatusFilter" class="form-select filter-select" onchange="filterSurveysList()">
+              <option value="all">Tüm Durumlar</option>
+              <option value="active">Yalnızca Aktif</option>
+              <option value="inactive">Kapalı / Pasif</option>
+            </select>
+          </div>
+          <div class="toolbar-right">
+            <button class="btn btn-secondary btn-sm" onclick="openWordUploadModal()" title="Word belgesinden (.docx) otomatik soru çıkarımı">
+              <span>📄 Word'den Yükle</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="section-header" style="margin-top: 10px;">
+          <div>
+            <h2 class="section-title">Kayıtlı Anketler</h2>
+            <p class="section-desc">Oluşturduğunuz anketleri yönetin, sonuçları inceleyin veya katılımcı linkini paylaşın.</p>
+          </div>
+          <div id="surveysCountBadge" class="surveys-count-pill">0 Anket</div>
+        </div>
+
+        <!-- Survey Cards Grid -->
+        <div class="surveys-grid" id="surveysListContainer">
+          <!-- Rendered via JS -->
+        </div>
+      </section>
+
+      <!-- ================= 2. SONUÇLAR VE CANLI ANALİTİK ================= -->
+      <section id="tab-analytics" class="view-section">
+        
+        <div class="section-header" style="margin-bottom: 20px;">
+          <div>
+            <h2 class="section-title">Sonuçlar & Canlı Analitik</h2>
+            <p class="section-desc">Gelen yanıtların canlı dağılımı, grafikler ve detaylı katılımcı verileri.</p>
+          </div>
+        </div>
+
+        <!-- Analytics Control Bar -->
+        <div class="analytics-control-bar">
+          <div class="analytics-control-left">
+            <div class="control-label-group">
+              <label class="control-label" for="analyticsSurveySelect">İncelenen Anket:</label>
+              <select id="analyticsSurveySelect" class="form-select analytics-select" onchange="loadAnalyticsForSelectedSurvey()">
+                <!-- Options populated via JS -->
+              </select>
+            </div>
+          </div>
+          <div class="analytics-control-right">
+            <button class="btn btn-secondary btn-sm" onclick="loadAnalyticsForSelectedSurvey()" title="Verileri yenile">
+              <span>🔄 Yenile</span>
+            </button>
+            <button class="btn btn-simulator btn-sm" onclick="openSimulatorModal(selectedAnalyticsSurveyId)" title="Bu anket için test yanıtı üret">
+              <span>⚡ Simülasyon</span>
+            </button>
+            <button class="btn btn-success btn-sm" onclick="exportCSV()" title="Excel uyumlu CSV indir">
+              <span>📥 Excel CSV</span>
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="exportJSON()" title="JSON formatında indir">
+              <span>💾 JSON</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Overview Stats Cards -->
+        <div class="stats-overview-grid">
+          <div class="stat-card">
+            <span class="stat-label">Toplam Yanıt</span>
+            <span class="stat-value" id="statTotalResponses">0</span>
+            <span class="stat-hint">Sistemdeki tüm yanıtlar</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Toplam Soru</span>
+            <span class="stat-value" style="color: var(--primary);" id="statTotalQuestions">0</span>
+            <span class="stat-hint">Anketteki soru sayısı</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Ortalama Puan</span>
+            <span class="stat-value" style="color: var(--accent-amber);" id="statAvgRating">-</span>
+            <span class="stat-hint">Puanlama soruları ortalaması</span>
+          </div>
+        </div>
+
+        <!-- ORAN - GRAFİK Görünüm Seçici -->
+        <div class="analytics-view-switcher-card">
+          <div class="view-switcher-meta">
+            <span class="view-switcher-title">📊 Analiz Görünümü</span>
+            <span class="view-switcher-desc">Anket sonuçlarını oran çubukları veya 3D renkli pasta grafiği ile görüntüleyin</span>
+          </div>
+          <div class="view-switcher-buttons">
+            <button type="button" class="btn-analytics-mode active" id="btnModeOran" onclick="setAnalyticsViewMode('oran')" title="Yüzde oran çubukları görünümü">
+              <span class="mode-icon">📊</span>
+              <span class="mode-label">ORAN</span>
+            </button>
+            <button type="button" class="btn-analytics-mode" id="btnModeGrafik" onclick="setAnalyticsViewMode('grafik')" title="3D Renkli Pasta Grafiği görünümü">
+              <span class="mode-icon">🥧</span>
+              <span class="mode-label">GRAFİK</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Question Charts Grid -->
+        <div id="analyticsChartsContainer">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <!-- Raw Responses Table Section -->
+        <div class="card" style="margin-top: 32px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3 style="font-size: 17px; font-weight: 700; color: var(--text-main);">Son Gelen Yanıtlar Günlüğü</h3>
+            <span class="badge badge-gray" id="responsesCountBadge">0 kayıt</span>
+          </div>
+          <div class="data-table-wrapper">
+            <table class="data-table" id="responsesDataTable">
+              <thead>
+                <tr id="responsesTableHead">
+                  <th style="width: 60px;">No</th>
+                  <th>Tarih</th>
+                  <th>IP / Kaynak</th>
+                  <th style="width: 110px; text-align: center;">Durum</th>
+                </tr>
+              </thead>
+              <tbody id="responsesTableBody">
+                <!-- Rendered via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 3. ANKET TASARLAYICI (BUILDER) ================= -->
+      <section id="tab-builder" class="view-section">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title" id="builderFormTitle">Yeni Anket Oluştur</h2>
+            <p class="section-desc">Sorularınızı, seçeneklerinizi ve form temasını yapılandırın.</p>
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button class="btn btn-secondary btn-sm" onclick="openWordUploadModal()">
+              <span>📄 Word'den İçe Aktar</span>
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="resetSurveyForm()">
+              <span>🧹 Temizle</span>
+            </button>
+            <button class="btn btn-primary btn-sm" onclick="saveSurveyForm()">
+              <span>💾 Anketi Kaydet & Yayınla</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="card" style="max-width: 860px; margin: 0 auto;">
+          <input type="hidden" id="editingSurveyId" value="">
+
+          <!-- Basic Info -->
+          <div class="form-group">
+            <label class="form-label">Anket Başlığı *</label>
+            <input type="text" id="surveyInputTitle" class="form-input" placeholder="Örn: 2026 Müşteri Memnuniyeti Anketi" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Açıklama / Katılımcı Bilgilendirmesi</label>
+            <textarea id="surveyInputDesc" class="form-textarea" placeholder="Katılımcıların formu doldururken göreceği bilgilendirme metni..."></textarea>
+          </div>
+
+          <div style="margin-bottom: 24px;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label">Anket Durumu</label>
+              <select id="surveyInputActive" class="form-select">
+                <option value="true">Aktif (Yanıtlara Açık)</option>
+                <option value="false">Pasif (Kapalı)</option>
+              </select>
+            </div>
+          </div>
+
+          <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 24px 0;">
+
+          <!-- Questions Section -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3 style="font-size: 17px; font-weight: 700; color: var(--text-main);">Sorular</h3>
+            <button class="btn btn-secondary btn-sm" onclick="addQuestionCard()">
+              + Soru Ekle
+            </button>
+          </div>
+
+          <div id="builderQuestionsList">
+            <!-- Dynamic Question Cards -->
+          </div>
+
+          <div style="text-align: center; margin-top: 20px;">
+            <button class="btn btn-secondary" onclick="addQuestionCard()" style="width: 100%; border-style: dashed; padding: 13px;">
+              + Yeni Soru Ekle
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 4. DIŞARIYA PAYLAŞ & YAYINLA ================= -->
+      <section id="tab-share" class="view-section">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Anketi Dışarıya Paylaş & Yayınla</h2>
+            <p class="section-desc">Anketinizin katılım linkini kopyalayın veya internet ortamına açın.</p>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 24px;">
+          <!-- Local & Wi-Fi Sharing -->
+          <div class="card">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+              <div style="font-size: 28px;">📱</div>
+              <div>
+                <h3 style="font-size: 17px; font-weight: 700; color: var(--text-main);">Anket Katılım Linki</h3>
+                <p style="font-size: 13px; color: var(--text-muted);">Katılımcılarla paylaşılacak doğrudan erişim bağlantısı.</p>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Paylaşılacak Anket</label>
+              <select id="shareSurveySelect" class="form-select" onchange="updateShareLinks()">
+                <!-- Populated via JS -->
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Katılımcı Bağlantısı (URL)</label>
+              <div style="display: flex; gap: 8px;">
+                <input type="text" id="shareLanUrlInput" class="form-input" readonly value="">
+                <button class="btn btn-primary" onclick="copyToClipboard('shareLanUrlInput')">Kopyala</button>
+                <a id="shareOpenLinkBtn" href="#" target="_blank" class="btn btn-secondary">Aç ↗</a>
+              </div>
+            </div>
+
+            <div style="margin-top: 16px; padding: 12px 14px; background: #f8fafc; border-radius: var(--radius-md); border: 1px solid var(--border-color); font-size: 13px; color: var(--text-muted);">
+              💡 <strong>Bilgi:</strong> Ankete ait ID numarası bağlantının sonunda yer alır (örn: <code>/s/1</code>). Bu bağlantıyı katılımcılarınıza ileterek anında yanıt toplayabilirsiniz.
+            </div>
+          </div>
+
+          <!-- Internet Deployment Guide -->
+          <div class="card">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+              <div style="font-size: 28px;">🌐</div>
+              <div>
+                <h3 style="font-size: 17px; font-weight: 700; color: var(--text-main);">İnternetten Canlıya Alma Seçenekleri</h3>
+                <p style="font-size: 13px; color: var(--text-muted);">Anketi dış dünyayla ücretsiz paylaşmanın en kolay 3 yolu:</p>
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 14px; font-size: 14px;">
+              <div style="background: #f8fafc; padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                <div style="font-weight: 700; color: var(--accent-cyan); margin-bottom: 4px;">1. Cloudflare Tunnel (Tamamen Ücretsiz & Kalıcı)</div>
+                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 8px;">Terminalden tek bir komutla güvenli HTTPS internet linki oluşturur:</p>
+                <code style="background: #0f172a; padding: 6px 10px; border-radius: 6px; font-family: monospace; color: #a5b4fc; display: block; font-size: 12px;">npx untun tunnel --port 3000</code>
+              </div>
+
+              <div style="background: #f8fafc; padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                <div style="font-weight: 700; color: var(--accent-emerald); margin-bottom: 4px;">2. LocalTunnel veya Ngrok (Hızlı Test)</div>
+                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 8px;">Anında hızlı test linki almak için:</p>
+                <code style="background: #0f172a; padding: 6px 10px; border-radius: 6px; font-family: monospace; color: #a5b4fc; display: block; font-size: 12px;">npx localtunnel --port 3000</code>
+              </div>
+
+              <div style="background: #f8fafc; padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                <div style="font-weight: 700; color: var(--accent-violet); margin-bottom: 4px;">3. Render veya Railway (7/24 Bulut Sunucu)</div>
+                <p style="color: var(--text-muted); font-size: 13px;">Projeyi GitHub'a yükleyip Render.com'a bağlarsanız, bilgisayarınız kapalıyken bile anketleriniz 7/24 internette aktif kalır ve yanıtlar toplanır.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div> <!-- /#authenticatedAppContainer -->
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- 1. SIMULATOR MODAL -->
+  <div class="modal-overlay" id="simulatorModal">
+    <div class="modal-dialog" style="max-width: 660px;">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 22px;">⚡</span>
+          <span class="modal-title">Otomatik Yanıt Simülatörü</span>
+        </div>
+        <button class="modal-close" onclick="closeSimulatorModal()">&times;</button>
+      </div>
+      <div class="modal-body" style="max-height: 80vh; overflow-y: auto;">
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 18px;">
+          Seçilen anket için otomatik gerçekçi katılımcı yanıtları üretir. Grafikleri ve analiz dağılımını canlı olarak inceleyebilirsiniz.
+        </p>
+
+        <div class="form-group">
+          <label class="form-label">Hedef Anket</label>
+          <select id="simTargetSurveySelect" class="form-select" onchange="onSimTargetSurveyChanged()">
+            <!-- Populated via JS -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Kaç Adet Anket Yanıtı Doldurulsun?</label>
+          <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="setSimCount(20)">20</button>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="setSimCount(50)">50</button>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="setSimCount(100)">100</button>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="setSimCount(500)">500</button>
+          </div>
+          <input type="number" id="simCountInput" class="form-input" min="1" max="5000" value="50">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Çalışma Modu</label>
+          <select id="simModeSelect" class="form-select" onchange="toggleSimSpeedOptions()">
+            <option value="batch">Hızlı Mod (Tümünü Anında Oluştur)</option>
+            <option value="stream">Canlı Akış (Saniye Bazlı Canlı Doldurucu)</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="simSpeedGroup" style="display: none;">
+          <label class="form-label">Canlı Doldurma Hızı</label>
+          <select id="simSpeedSelect" class="form-select">
+            <option value="1000">Saniyede 1 Anket (Sakin)</option>
+            <option value="400">Saniyede 2.5 Anket (Standart)</option>
+            <option value="200" selected>Saniyede 5 Anket (Hızlı)</option>
+            <option value="80">Saniyede 12 Anket (Turbo)</option>
+          </select>
+        </div>
+
+        <!-- Soru & Yanıt Kısıtlamaları ve Yük (Ağırlık) Dağılımı -->
+        <div class="sim-constraints-container" style="margin-top: 20px; padding-top: 16px; border-top: 1px dashed var(--border-color);">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; gap: 12px; flex-wrap: wrap;">
+            <div>
+              <div style="font-weight: 700; font-size: 14px; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
+                <span>🎯 Soru Yük & Ağırlık Ayarları</span>
+                <span class="badge badge-purple" id="simConstraintCountBadge" style="display: none; font-size: 11px;">0 Kural</span>
+              </div>
+              <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+                Cevapların seçilme yüzdelerini (%) belirleyin veya istemediğiniz cevapları engelleyin.
+              </div>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button type="button" class="btn btn-secondary btn-sm" onclick="addSimulatorConstraint('weight')" id="btnAddSimWeight" style="white-space: nowrap; font-weight: 600; border-color: #6366f1; color: #4338ca; background: #eef2ff;" title="Seçeneklere yüzde / ağırlık oranı tanımla">
+                ⚖️ Yük / Yüzde Ayarı Ekle
+              </button>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="addSimulatorConstraint('exclude')" id="btnAddSimConstraint" style="white-space: nowrap; font-weight: 600; border-color: #cbd5e1; color: var(--text-muted); background: #f8fafc;" title="İstemediğiniz cevapları üzerini çizerek engelle">
+                🚫 Hızlı Engelle (Çiz)
+              </button>
+            </div>
+          </div>
+
+          <div id="simConstraintsList" style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+            <!-- Dinamik Kısıt Maddeleri -->
+          </div>
+        </div>
+
+        <!-- Simulation Progress Box -->
+        <div id="simProgressBox" style="display: none; background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px; margin-top: 16px;">
+          <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 8px;">
+            <span id="simStatusLabel">Simülasyon çalışıyor...</span>
+            <span id="simProgressCount" style="color: var(--primary); font-family: monospace;">0 / 0</span>
+          </div>
+          <div class="chart-bar-track" style="height: 10px; margin-bottom: 8px;">
+            <div id="simProgressBar" class="chart-bar-fill" style="width: 0%; background: linear-gradient(90deg, #7c3aed, #ec4899);"></div>
+          </div>
+          <div id="simLogTicker" style="font-size: 11px; color: var(--text-dim); font-family: monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+            Hazırlanıyor...
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeSimulatorModal()">Kapat</button>
+        <button type="button" class="btn btn-danger" id="simStopBtn" style="display: none;" onclick="stopLiveSimulation()">Durdur</button>
+        <button type="button" class="btn btn-simulator" id="simStartBtn" onclick="startSimulation()">
+          ⚡ Doldurmayı Başlat
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. WORD UPLOAD MODAL -->
+  <div class="modal-overlay" id="wordUploadModal">
+    <div class="modal-dialog" style="max-width: 620px;">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 22px;">📄</span>
+          <span class="modal-title">Word Belgesinden Anket Yükle</span>
+        </div>
+        <button class="modal-close" onclick="closeWordUploadModal()">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div style="display: flex; gap: 8px; margin-bottom: 18px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
+          <button type="button" class="btn btn-sm btn-primary" id="btnWordTabFile" onclick="switchWordModalTab('file')">📁 Dosya Seç (.docx / .txt)</button>
+          <button type="button" class="btn btn-sm btn-secondary" id="btnWordTabPaste" onclick="switchWordModalTab('paste')">📋 Metin Yapıştır</button>
+        </div>
+
+        <!-- Section 1: File Dropzone -->
+        <div id="wordFileSection">
+          <div id="wordDropzone" class="word-dropzone" onclick="document.getElementById('wordFileInput').click()">
+            <div style="font-size: 40px; margin-bottom: 8px;">📥</div>
+            <div style="font-weight: 700; color: var(--text-main); font-size: 15px; margin-bottom: 4px;">
+              Word dosyanızı (.docx) buraya sürükleyin veya seçin
+            </div>
+            <div style="font-size: 13px; color: var(--text-muted);">
+              Sistem başlıktaki soruları, seçenekleri ve soru tiplerini otomatik ayrıştırır
+            </div>
+            <input type="file" id="wordFileInput" accept=".docx,.txt" style="display: none;" onchange="handleWordFileSelect(event)">
+          </div>
+        </div>
+
+        <!-- Section 2: Paste Raw Text -->
+        <div id="wordPasteSection" style="display: none;">
+          <div class="form-group">
+            <label class="form-label">Anket Metnini Buraya Yapıştırın</label>
+            <textarea id="wordPasteInput" class="form-textarea" style="min-height: 160px; font-family: monospace; font-size: 13px;" placeholder="1. Soru Metni&#10;A) Seçenek 1&#10;B) Seçenek 2&#10;&#10;2. Soru Metni&#10;[ ] Seçenek A..."></textarea>
+          </div>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="parsePastedText()">Ayrıştır ve İncele</button>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div id="wordParsingSpinner" style="display: none; text-align: center; padding: 24px 0;">
+          <div style="font-size: 32px; animation: spin 1s infinite linear; margin-bottom: 8px;">⚙️</div>
+          <p style="color: var(--text-muted); font-size: 14px;">Word belgesi taranıyor ve sorular tespit ediliyor...</p>
+        </div>
+
+        <!-- Parsed Preview Box -->
+        <div id="wordPreviewBox" style="display: none; margin-top: 18px; background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <span style="font-weight: 700; color: var(--text-main); font-size: 14px;">Tespit Edilen İçerik</span>
+            <span class="badge badge-success" id="wordDetectedCountBadge">0 Soru Tespit Edildi</span>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label class="form-label" style="font-size: 12px;">Anket Başlığı</label>
+            <input type="text" id="wordPreviewTitle" class="form-input" style="padding: 8px 12px; font-size: 13px;">
+          </div>
+
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px; font-weight: 600;">Soru Önizleme:</div>
+          <div id="wordPreviewQuestionsList" style="max-height: 180px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 4px;">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeWordUploadModal()">İptal</button>
+        <button type="button" class="btn btn-primary" id="btnWordOpenInBuilder" style="display: none;" onclick="applyWordToBuilder()">
+          🛠️ Tasarlayıcıda Aç & Düzenle
+        </button>
+        <button type="button" class="btn btn-success" id="btnWordSaveDirect" style="display: none;" onclick="saveWordSurveyDirectly()">
+          🚀 Doğrudan Kaydet & Yayınla
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- 4. CONFIRM ACTION MODAL -->
+  <div class="modal-overlay" id="confirmModal">
+    <div class="modal-dialog" style="max-width: 420px;">
+      <div class="modal-header">
+        <span class="modal-title" id="confirmModalTitle">Emin misiniz?</span>
+        <button class="modal-close" onclick="closeConfirmModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 14px; color: var(--text-muted);" id="confirmModalDesc">Bu işlem geri alınamaz.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeConfirmModal()">İptal</button>
+        <button type="button" class="btn btn-danger" id="confirmModalActionBtn">Evet, Onayla</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Firebase Cloud SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="/js/firebase-config.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

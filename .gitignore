@@ -1,0 +1,16 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Binaries & large tools
+firebase.exe
+*.exe
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Environment & OS files
+.DS_Store
+Thumbs.db
