@@ -1037,7 +1037,7 @@ async function saveSurveyForm() {
     let saved;
     if (window.FirebaseService) {
       saved = await window.FirebaseService.saveSurvey({
-        id: editingId || String(Date.now()),
+        id: editingId || '',
         ...payload
       });
     } else {

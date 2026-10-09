@@ -79,10 +79,27 @@
     }
   }
 
+  // Helper: Get next clean sequential numeric ID (1, 2, 3, 4, 5...)
+  async function getNextNumericSurveyId() {
+    const surveys = await getAllSurveys();
+    let maxId = 0;
+    surveys.forEach(s => {
+      const num = parseInt(s.id, 10);
+      if (!isNaN(num) && String(num) === String(s.id).trim() && num > maxId) {
+        maxId = num;
+      }
+    });
+    return String(maxId + 1);
+  }
+
   // 3. Save or update survey
   async function saveSurvey(survey) {
     const db = getDb();
-    const id = String(survey.id || Date.now().toString());
+    let id = survey.id ? String(survey.id).trim() : '';
+    if (!id) {
+      id = await getNextNumericSurveyId();
+    }
+
     const surveyToSave = {
       ...survey,
       id,
@@ -98,7 +115,7 @@
     if (db) {
       try {
         await db.collection('surveys').doc(id).set(surveyToSave, { merge: true });
-        console.log('☁️ Anket Firestore\'a kaydedildi:', id);
+        console.log('☁️ Anket Firestore\'a kaydedildi. Sabit Temiz ID:', id);
       } catch (err) {
         console.error('Firestore kayıt hatası:', err);
       }
@@ -113,7 +130,7 @@
     const original = await getSurveyById(surveyId);
     if (!original) throw new Error('Kopyalanacak anket bulunamadı');
 
-    const newId = String(Date.now().toString());
+    const newId = await getNextNumericSurveyId();
     const newSurvey = {
       ...JSON.parse(JSON.stringify(original)),
       id: newId,
